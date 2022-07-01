@@ -2,19 +2,29 @@ package entity
 
 import (
 	"errors"
+	"html"
+	"strings"
+
 	"github.com/Hsmnasiri/Torob-sample-core/utils"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-	"html"
-	"strings"
 )
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"size:255;not null;unique" json:"username"`
-	Password string `gorm:"size:255;not null;" json:"password"`
-	Email    string `gorm:"size:255;not null;unique'" json:"email"`
-	Name     string `json:"name"`
+	Username  string    `gorm:"size:255;not null;unique" json:"username"`
+	Password  string    `gorm:"size:255;not null;" json:"password"`
+	Email     string    `gorm:"size:255;not null;unique'" json:"email"`
+	Name      string    `json:"name"`
+	Role      string    `gorm:"default=user; not null" json :"role"`
+	Favorites []Product `gorm:"many2many:user_favorites;"`
+	Recent    []Product `gorm:"many2many:user_recent;"`
+}
+
+func GetUsers() ([]User, error) {
+	users := []User{}
+	DB.Find(&users)
+	return users, nil
 }
 
 func GetUserByID(uid uint) (User, error) {
@@ -57,7 +67,7 @@ func LoginCheck(username string, password string) (string, error) {
 		return "", err
 	}
 
-	token, err := utils.GenerateToken(u.ID)
+	token, err := utils.GenerateToken(u.ID, u.Role)
 
 	if err != nil {
 		return "", err

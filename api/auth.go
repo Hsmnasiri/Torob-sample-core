@@ -1,10 +1,11 @@
 package api
 
 import (
+	"net/http"
+
 	"github.com/Hsmnasiri/Torob-sample-core/entity"
 	"github.com/Hsmnasiri/Torob-sample-core/utils"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func CurrentUser(c *gin.Context) {
@@ -59,6 +60,7 @@ func Login(c *gin.Context) {
 type RegisterInput struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
+	Email    string `json:"email" binding:"required"`
 }
 
 func Register(c *gin.Context) {
@@ -74,6 +76,7 @@ func Register(c *gin.Context) {
 
 	u.Username = input.Username
 	u.Password = input.Password
+	u.Email = input.Email
 
 	_, err := u.SaveUser()
 
@@ -83,5 +86,17 @@ func Register(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "registration success"})
+
+}
+func GetUsers(c *gin.Context) {
+
+	users, err := entity.GetUsers()
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "users find success", "users": users})
 
 }

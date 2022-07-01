@@ -5,10 +5,11 @@ import (
 
 	"gorm.io/driver/mysql"
 
-	"github.com/joho/godotenv"
-	"gorm.io/gorm"
 	"log"
 	"os"
+
+	"github.com/joho/godotenv"
+	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
@@ -29,15 +30,15 @@ func ConnectDataBase() {
 
 	DBURL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", DbUser, DbPassword, DbHost, DbPort, DbName)
 
-	db, err := gorm.Open(mysql.Open(DBURL), &gorm.Config{})
+	DB, err = gorm.Open(mysql.Open(DBURL), &gorm.Config{})
 
 	if err != nil {
-		fmt.Println("Cannot connect to database ", db)
+		fmt.Println("Cannot connect to database ", DB)
 		log.Fatal("connection error:", err)
 	} else {
-		fmt.Println("We are connected to the database ", db)
+		fmt.Println("We are connected to the database ", DB)
 	}
 
-	DB.AutoMigrate(&User{})
+	DB.AutoMigrate(&User{}, &Shop{}, &Product{}, &Type{}, &Report{})
 
 }

@@ -16,7 +16,7 @@ type User struct {
 	Password  string    `gorm:"size:255;not null;" json:"password"`
 	Email     string    `gorm:"size:255;not null;unique'" json:"email"`
 	Name      string    `json:"name"`
-	Role      string    `gorm:"default=user; not null" json :"role"`
+	Role      string    `gorm:"default:18;not null" json:"role"`
 	Favorites []Product `gorm:"many2many:user_favorites;"`
 	Recent    []Product `gorm:"many2many:user_recent;"`
 }
@@ -32,6 +32,19 @@ func GetUserByID(uid uint) (User, error) {
 	var u User
 
 	if err := DB.First(&u, uid).Error; err != nil {
+		return u, errors.New("user not found")
+	}
+
+	u.PrepareGive()
+
+	return u, nil
+
+}
+func GetUserByUsername(usr string) (User, error) {
+
+	var u User
+
+	if err := DB.First(&u, usr).Error; err != nil {
 		return u, errors.New("user not found")
 	}
 

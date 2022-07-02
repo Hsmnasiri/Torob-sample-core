@@ -2,11 +2,58 @@ package api
 
 import (
 	"net/http"
+	"unicode"
 
 	"github.com/Hsmnasiri/Torob-sample-core/entity"
 	"github.com/Hsmnasiri/Torob-sample-core/utils"
 	"github.com/gin-gonic/gin"
 )
+
+type LoginInput struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+type RegisterInput struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	Email    string `json:"email" binding:"required"`
+	Role     string `json:"role" binding:"required"`
+}
+
+func PasswordCheck(pass string) bool {
+	var (
+		upp, low, num bool
+		tot           uint8
+	)
+
+	for _, char := range pass {
+		switch {
+		case unicode.IsUpper(char):
+			upp = true
+			tot++
+		case unicode.IsLower(char):
+			low = true
+			tot++
+		case unicode.IsNumber(char):
+			num = true
+			tot++
+		default:
+			return false
+		}
+	}
+
+	if !upp || !low || !num || tot < 8 {
+		return false
+	}
+
+	return true
+}
+
+func UsernameCheck(username string) bool {
+	_, err := entity.GetUserByUsername(username)
+
+	return err == nil
+}
 
 func CurrentUser(c *gin.Context) {
 
@@ -25,11 +72,6 @@ func CurrentUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "success", "data": u})
-}
-
-type LoginInput struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
 }
 
 func Login(c *gin.Context) {
@@ -57,13 +99,6 @@ func Login(c *gin.Context) {
 
 }
 
-type RegisterInput struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Email    string `json:"email" binding:"required"`
-	Role     string `json:"role" binding:"required"`
-}
-
 func Register(c *gin.Context) {
 
 	var input RegisterInput
@@ -74,6 +109,17 @@ func Register(c *gin.Context) {
 	}
 
 	u := entity.User{}
+	isPasswordOk := PasswordCheck(input.Password)
+	if !isPasswordOk {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "password is not safe"})
+		return
+	}
+
+	isUsernameOk := UsernameCheck(input.Password)
+	if !isUsernameOk {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "user is already taken"})
+		return
+	}
 
 	u.Username = input.Username
 	u.Password = input.Password

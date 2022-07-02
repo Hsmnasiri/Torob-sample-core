@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Hsmnasiri/Torob-sample-core/entity"
@@ -8,9 +9,11 @@ import (
 )
 
 type CreateInput struct {
-	Name  string `json:"name" binding:"required"`
-	Price string `json:"price" binding:"required"`
-	Types string `json:"types"  `
+	Name         string `json:"name" binding:"required"`
+	LowestPrice  string `json:"lowest_price" binding:"required"`
+	HighestPrice string `json:"highest_price" binding:"required"`
+	Types        string `json:"types"`
+	Img          string `json:"img"`
 }
 
 func CreateProduct(c *gin.Context) {
@@ -24,11 +27,13 @@ func CreateProduct(c *gin.Context) {
 	p := entity.Product{}
 
 	p.Name = input.Name
-	p.Price = input.Price
-	//p.Types = input.Types
+	p.HighestPrice = input.HighestPrice
+	p.LowestPrice = input.LowestPrice
 
 	pout, err := p.SaveProduct()
+	r := entity.DB.Model(&entity.Type{}).Where("ID = ?", input.Types).Association("Products").Append(&pout)
 
+	fmt.Println(r)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -37,4 +42,3 @@ func CreateProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "registration success", "product": pout})
 
 }
-

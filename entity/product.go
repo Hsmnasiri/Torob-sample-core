@@ -4,10 +4,12 @@ import "gorm.io/gorm"
 
 type Product struct {
 	gorm.Model
-	Name  string `json:"name"`
-	Price string `json:"Price"`
-	Types []Type `gorm:"many2many:type_products;"`
-	Shops []Shop `gorm:"many2many:shop_products;"`
+	Name         string `json:"name"`
+	LowestPrice  string `json:"lowest_price"`
+	HighestPrice string `json:"highest_price"`
+	TypeID       uint
+	SubTypeID    uint
+	Shops        []Shop `gorm:"many2many:shop_products;"`
 }
 
 func (p *Product) SaveProduct() (*Product, error) {

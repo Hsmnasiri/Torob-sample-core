@@ -32,7 +32,8 @@ func main() {
 	productApi.POST("/", api.CreateProduct)
 	productApi.GET("/", api.GetProducts)
 	productApi.GET("/:productId", api.GetOneProduct)
-	productApi.PUT("/", api.UpdateProducts)
+	productApi.PUT("/:productId", api.UpdateProducts)
+	productApi.PUT("/shop/:productId", api.NewShopForProduct)
 	productApi.DELETE("/", api.DeleteProducts)
 
 	typeApi := protected.Group("/types")

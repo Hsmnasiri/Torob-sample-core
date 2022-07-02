@@ -20,13 +20,36 @@ type User struct {
 	Favorites []Product `gorm:"many2many:user_favorites;"`
 	Recent    []Product `gorm:"many2many:user_recent;"`
 }
+type user_recent struct {
+	gorm.Model
+	user_id    uint
+	product_id uint
+}
+type user_favorites struct {
+	gorm.Model
+	user_id    uint
+	product_id uint
+}
 
 func GetUsers() ([]User, error) {
 	users := []User{}
 	DB.Find(&users)
 	return users, nil
 }
-
+func IncrementFavorite(uid uint, pid uint) error {
+	uf := new(user_favorites)
+	uf.user_id = uid
+	uf.product_id = pid
+	err := DB.Create(uf).Error
+	return err
+}
+func IncrementRecent(uid uint, pid uint) error {
+	uf := new(user_favorites)
+	uf.user_id = uid
+	uf.product_id = pid
+	err := DB.Create(uf).Error
+	return err
+}
 func GetUserByID(uid uint) (User, error) {
 
 	var u User

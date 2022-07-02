@@ -56,6 +56,16 @@ func GetTypes(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "users find success", "types": types})
+	c.JSON(http.StatusOK, gin.H{"message": "types find success", "types": types})
 
+}
+func GetTypeProducts(c *gin.Context) {
+	products, err := entity.GetSubTypeProducts(c.Param("name"))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "product of this find success", "products": products})
 }

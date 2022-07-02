@@ -55,6 +55,6 @@ func GetSubTypes(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "create Type success", "subTypes": subTypes})
+	c.JSON(http.StatusOK, gin.H{"message": "users find success", "subTypes": subTypes})
 
 }

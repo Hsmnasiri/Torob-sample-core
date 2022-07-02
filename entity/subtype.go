@@ -23,8 +23,7 @@ func GetSubTypeProducts(name string) ([]Type, error) {
 }
 func (t *SubType) SaveSubType() (*SubType, error) {
 
-	var err error
-	err = DB.Create(&t).Error
+	err := DB.Create(&t).Error
 	if err != nil {
 		return &SubType{}, err
 	}

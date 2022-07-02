@@ -36,3 +36,17 @@ func CreateReport(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "registration success", "product": rout})
 
 }
+func GetReports(c *gin.Context) {
+
+}
+func GetOneReport(c *gin.Context) {
+
+}
+
+func UpdateReport(c *gin.Context) {
+
+}
+
+func DeleteReport(c *gin.Context) {
+
+}

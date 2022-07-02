@@ -30,11 +30,22 @@ func main() {
 
 	productApi := protected.Group("/product")
 	productApi.POST("/", api.CreateProduct)
-	productApi.GET("/", api.GetTypes)
+	productApi.GET("/", api.GetProducts)
+	productApi.GET("/:productId", api.GetOneProduct)
+	productApi.PUT("/", api.UpdateProducts)
+	productApi.DELETE("/", api.DeleteProducts)
 
 	typeApi := protected.Group("/types")
 	typeApi.GET("/", api.GetTypes)
 	typeApi.POST("/", api.CreateTypes)
+
+	subtypeApi := protected.Group("/subtypes")
+	subtypeApi.GET("/", api.GetSubTypes)
+	subtypeApi.POST("/", api.CreateSubTypes)
+
+	reportApi := protected.Group("/report")
+	reportApi.POST("/", api.CreateReport)
+	reportApi.GET("/:shopId", api.GetReports)
 
 	r.Run(":9090")
 

@@ -42,3 +42,18 @@ func CreateProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "registration success", "product": pout})
 
 }
+
+func GetProducts(c *gin.Context) {
+
+}
+func GetOneProduct(c *gin.Context) {
+
+}
+
+func UpdateProducts(c *gin.Context) {
+
+}
+
+func DeleteProducts(c *gin.Context) {
+
+}

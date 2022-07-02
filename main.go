@@ -16,7 +16,7 @@ func main() {
 	public.POST("/register", api.Register)
 	public.POST("/login", api.Login)
 	public.POST("/product", api.CreateProduct)
-	public.POST("/types", api.CreateTypes)
+	public.POST("/types",utils.JwtAuthMiddleware(), api.CreateTypes)
 	public.POST("/shop", api.CreateShop)
 
 	public.PUT("/shop", api.UpdateShop)

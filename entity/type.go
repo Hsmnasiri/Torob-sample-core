@@ -14,3 +14,12 @@ func GetTypes() ([]Type, error) {
 	DB.Find(&types)
 	return types, nil
 }
+func (t *Type) SaveType() (*Type, error) {
+
+	var err error
+	err = DB.Create(&t).Error
+	if err != nil {
+		return &Type{}, err
+	}
+	return t, nil
+}

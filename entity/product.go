@@ -7,6 +7,7 @@ type Product struct {
 	Name  string `json:"name"`
 	Price string `json:"Price"`
 	Types []Type `gorm:"many2many:type_products;"`
+	Shops []Shop `gorm:"many2many:shop_products;"`
 }
 
 func (p *Product) SaveProduct() (*Product, error) {

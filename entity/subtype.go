@@ -10,6 +10,17 @@ type SubType struct {
 	Products []Product
 }
 
+func GetSubTypes() ([]Type, error) {
+	types := []Type{}
+	DB.Find(&types)
+	return types, nil
+}
+func GetSubTypeProducts(name string) ([]Type, error) {
+	var types []Type
+
+	err := DB.Model(&Product{}).Where("name = ?", name).Preload("Products").Find(&types).Error
+	return types, err
+}
 func (t *SubType) SaveSubType() (*SubType, error) {
 
 	var err error

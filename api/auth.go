@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 	"unicode"
 
@@ -52,7 +53,10 @@ func PasswordCheck(pass string) bool {
 func UsernameCheck(username string) bool {
 	_, err := entity.GetUserByUsername(username)
 
-	return err == nil
+	if err != nil {
+		return true
+	}
+	return false
 }
 
 func CurrentUser(c *gin.Context) {
@@ -115,8 +119,9 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	isUsernameOk := UsernameCheck(input.Password)
-	if !isUsernameOk {
+	isUsernameTaken := UsernameCheck(input.Username)
+	fmt.Println(isUsernameTaken)
+	if !isUsernameTaken {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "user is already taken"})
 		return
 	}

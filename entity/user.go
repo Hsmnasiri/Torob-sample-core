@@ -2,6 +2,7 @@ package entity
 
 import (
 	"errors"
+	"fmt"
 	"html"
 	"strings"
 
@@ -67,10 +68,10 @@ func GetUserByUsername(usr string) (User, error) {
 
 	var u User
 
-	if err := DB.First(&u, usr).Error; err != nil {
+	if err := DB.Where("username = ?", usr).First(&u).Error; err != nil {
 		return u, errors.New("user not found")
 	}
-
+	fmt.Println(u)
 	u.PrepareGive()
 
 	return u, nil
